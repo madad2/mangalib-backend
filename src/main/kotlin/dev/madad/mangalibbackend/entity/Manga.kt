@@ -29,12 +29,12 @@ data class Manga(
     @Column(nullable = false)
     val title: String = "",
 
-    @Column(columnDefinition = "text")
+    @Column()
     val description: String = "",
 
     @Column(name = "cover_img_url")
     val coverImgUrl: String = "https://imgur.com/a/63KSvjn",
 
     @OneToMany(mappedBy = "manga", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val chapters: List<Chapter> = emptyList()
+    val chapters: List<Chapter>
 )
