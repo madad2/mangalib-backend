@@ -29,7 +29,7 @@ data class Manga(
     @Column(nullable = false)
     val title: String = "",
 
-    @Column()
+    @Column(columnDefinition = "text")
     val description: String = "",
 
     @Column(name = "cover_img_url")
