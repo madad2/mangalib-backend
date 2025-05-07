@@ -11,23 +11,21 @@ import org.springframework.stereotype.Service
 class MangaService(
     private val mangaRepository: MangaRepository
 ) {
-    fun getAllManga() = mangaRepository.findAll()
+    fun getAllManga(): List<Manga> = mangaRepository.findAll()
 
-    fun getMangaById(id: Long) = mangaRepository.findById(id).orElse(null)
+    fun getMangaById(id: Long): Manga? = mangaRepository.findById(id).orElse(null)
 
-    fun create(manga: Manga) = mangaRepository.save(manga)
+    fun create(manga: Manga): Manga = mangaRepository.save(manga)
 
-    fun update(id: Long, updatedManga: Manga): Manga? {
-        return mangaRepository.findById(id).map { existingManga ->
-            val mangaToUpdate = existingManga.copy(
+    fun update(id: Long, updatedManga: Manga): Manga? =
+        mangaRepository.findById(id).map { existingManga ->
+            existingManga.copy(
                 title = updatedManga.title,
                 description = updatedManga.description,
                 coverImgUrl = updatedManga.coverImgUrl,
                 chapters = updatedManga.chapters
             )
-            mangaRepository.save(mangaToUpdate)
-        }.orElse(null)
-    }
+        }.map(mangaRepository::save).orElse(null)
 
     fun delete(id: Long) = mangaRepository.deleteById(id)
 }
