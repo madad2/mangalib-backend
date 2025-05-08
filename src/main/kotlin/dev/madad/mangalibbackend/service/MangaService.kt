@@ -1,6 +1,7 @@
 package dev.madad.mangalibbackend.service
 
 import dev.madad.mangalibbackend.entity.Manga
+import dev.madad.mangalibbackend.exception.NotFoundException
 import dev.madad.mangalibbackend.repository.MangaRepository
 import org.springframework.stereotype.Service
 
@@ -14,10 +15,10 @@ class MangaService(
     fun getAllManga(): List<Manga> = mangaRepository.findAll()
 
     fun getMangaById(id: Long): Manga = mangaRepository.findById(id).orElse(null)
-        ?: throw NoSuchElementException("Манга с id=$id не найдена")
+        ?: throw NotFoundException("Манга с id=$id не найдена")
 
     fun getMangaByTitle(title: String): Manga = mangaRepository.findByTitle(title)
-        ?: throw NoSuchElementException("Манга с названием '$title' не найдена")
+        ?: throw NotFoundException("Манга с названием '$title' не найдена")
 
     fun create(manga: Manga): Manga = mangaRepository.save(manga)
 
@@ -34,14 +35,14 @@ class MangaService(
 
     fun delete(id: Long) {
         if (!mangaRepository.existsById(id)) {
-            throw NoSuchElementException("Манга с id=$id не найдена")
+            throw NotFoundException("Манга с id=$id не найдена")
         }
         mangaRepository.deleteById(id)
     }
 
     fun delete(title: String) {
         if (!mangaRepository.existsByTitle(title)) {
-            throw NoSuchElementException("Манга с названием '$title' не найдена")
+            throw NotFoundException("Манга с названием '$title' не найдена")
         }
         mangaRepository.deleteByTitle(title)
     }
