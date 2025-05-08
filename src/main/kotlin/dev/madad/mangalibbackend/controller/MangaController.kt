@@ -1,7 +1,10 @@
 package dev.madad.mangalibbackend.controller
 
-import dev.madad.mangalibbackend.entity.Manga
+import dev.madad.mangalibbackend.dto.MangaDto
+import dev.madad.mangalibbackend.dto.toDto
+import dev.madad.mangalibbackend.dto.toEntity
 import dev.madad.mangalibbackend.service.MangaService
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -22,23 +25,31 @@ class MangaController(
     private val mangaService: MangaService
 ) {
     @GetMapping
-    fun getAllManga(): ResponseEntity<List<Manga>> = ResponseEntity.ok(mangaService.getAllManga())
+    fun getAllManga(): ResponseEntity<List<MangaDto>> = ResponseEntity.ok(mangaService.getAllManga().map { it.toDto() })
 
     @GetMapping("/{id}")
-    fun getMangaById(@PathVariable id: Long): ResponseEntity<Manga> =
-        mangaService.getMangaById(id)?.let { ResponseEntity.ok(it) } ?: ResponseEntity.notFound().build()
+    fun getMangaById(@PathVariable id: Long): ResponseEntity<MangaDto> =
+        mangaService.getMangaById(id)?.let { ResponseEntity.ok(it.toDto()) } ?: ResponseEntity.notFound().build()
 
     @PostMapping
-    fun createManga(@RequestBody manga: Manga): ResponseEntity<Manga> =
-        ResponseEntity.status(HttpStatus.CREATED).body(mangaService.create(manga))
+    fun createManga(@Valid @RequestBody mangaDto: MangaDto): ResponseEntity<MangaDto> {
+        val createdEntity = mangaService.create(mangaDto.toEntity())
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdEntity.toDto())
+    }
 
     @PutMapping("/{id}")
-    fun updateManga(@PathVariable id: Long, @RequestBody manga: Manga): ResponseEntity<Manga> =
-        mangaService.update(id, manga)?.let { ResponseEntity.ok(it) } ?: ResponseEntity.notFound().build()
+    fun updateManga(@PathVariable id: Long, @Valid @RequestBody mangaDto: MangaDto): ResponseEntity<MangaDto> =
+        ResponseEntity.ok(mangaService.update(id, mangaDto.toEntity()).toDto())
 
     @DeleteMapping("/{id}")
     fun deleteManga(@PathVariable id: Long): ResponseEntity<Unit> {
         mangaService.delete(id)
+        return ResponseEntity.noContent().build()
+    }
+
+    @DeleteMapping("/title/{title}")
+    fun deleteMangaByTitle(@PathVariable title: String): ResponseEntity<Unit> {
+        mangaService.delete(title)
         return ResponseEntity.noContent().build()
     }
 }
