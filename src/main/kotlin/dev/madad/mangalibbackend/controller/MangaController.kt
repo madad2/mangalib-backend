@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 /**
@@ -29,7 +30,7 @@ class MangaController(
 
     @GetMapping("/{id}")
     fun getMangaById(@PathVariable id: Long): ResponseEntity<MangaDto> =
-        mangaService.getMangaById(id)?.let { ResponseEntity.ok(it.toDto()) } ?: ResponseEntity.notFound().build()
+        mangaService.getMangaById(id).let { ResponseEntity.ok(it.toDto()) }
 
     @PostMapping
     fun createManga(@Valid @RequestBody mangaDto: MangaDto): ResponseEntity<MangaDto> {
@@ -51,5 +52,12 @@ class MangaController(
     fun deleteMangaByTitle(@PathVariable title: String): ResponseEntity<Unit> {
         mangaService.delete(title)
         return ResponseEntity.noContent().build()
+    }
+
+    @GetMapping("/search")
+    fun searchManga(@RequestParam fragment: String): ResponseEntity<List<MangaDto>> {
+        val results = mangaService.searchByTitleFragment(fragment)
+        val dtoList = results.map { it.toDto() }
+        return ResponseEntity.ok(dtoList)
     }
 }
