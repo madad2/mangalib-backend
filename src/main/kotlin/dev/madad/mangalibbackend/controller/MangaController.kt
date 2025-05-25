@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 /**
@@ -47,8 +48,8 @@ class MangaController(
         return ResponseEntity.noContent().build()
     }
 
-    @DeleteMapping("/title/{title}")
-    fun deleteMangaByTitle(@PathVariable title: String): ResponseEntity<Unit> {
+    @DeleteMapping
+    fun deleteMangaByTitle(@RequestParam title: String): ResponseEntity<Unit> {
         mangaService.deleteManga(title)
         return ResponseEntity.noContent().build()
     }

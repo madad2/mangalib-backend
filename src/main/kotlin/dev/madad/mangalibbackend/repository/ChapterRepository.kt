@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ChapterRepository : JpaRepository<Chapter, Long> {
-    fun findByMangaTitle(title: String): List<Chapter>
+    fun getChaptersByMangaId(mangaId: Long): List<Chapter>
+    fun getChaptersByMangaTitle(title: String): List<Chapter>
+    fun existsByChapterNumAndMangaId(chapterNum: Int, mangaId: Long): Boolean
     fun existsByChapterNumAndMangaTitle(chapterNum: Int, title: String): Boolean
 }
