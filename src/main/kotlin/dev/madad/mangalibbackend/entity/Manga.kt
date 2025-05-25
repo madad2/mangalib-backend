@@ -26,15 +26,15 @@ data class Manga(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true, length = 255)
     val title: String = "",
 
-    @Column()
+    @Column(nullable = false)
     val description: String = "",
 
-    @Column(name = "cover_img_url")
-    val coverImgUrl: String = "https://imgur.com/a/63KSvjn",
+    @Column(nullable = false, name = "cover_img_url")
+    val coverImgUrl: String = "",
 
-    @OneToMany(mappedBy = "manga", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val chapters: List<Chapter>
+    @OneToMany(mappedBy = "manga", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
+    val chapters: List<Chapter> = mutableListOf()
 )
