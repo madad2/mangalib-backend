@@ -53,4 +53,11 @@ class MangaController(
         mangaService.deleteManga(title)
         return ResponseEntity.noContent().build()
     }
+
+    @GetMapping("/search")
+    fun searchManga(@RequestParam fragment: String): ResponseEntity<List<MangaDto>> {
+        val results = mangaService.searchByTitleFragment(fragment)
+        val dtoList = results.map { it.toDto() }
+        return ResponseEntity.ok(dtoList)
+    }
 }

@@ -2,7 +2,6 @@ package dev.madad.mangalibbackend.dto
 
 import dev.madad.mangalibbackend.entity.Manga
 import jakarta.validation.constraints.NotBlank
-import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 
 data class MangaDto(

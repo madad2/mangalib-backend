@@ -65,4 +65,6 @@ class MangaService(
         }
         mangaRepository.deleteByTitle(title)
     }
+
+    fun searchByTitleFragment(fragment: String): List<Manga> = mangaRepository.findByTitleContainingIgnoreCase(fragment)
 }
