@@ -33,23 +33,23 @@ class MangaController(
 
     @PostMapping
     fun createManga(@Valid @RequestBody mangaDto: MangaDto): ResponseEntity<MangaDto> {
-        val createdEntity = mangaService.create(mangaDto.toEntity())
+        val createdEntity = mangaService.createManga(mangaDto.toEntity())
         return ResponseEntity.status(HttpStatus.CREATED).body(createdEntity.toDto())
     }
 
     @PutMapping("/{id}")
     fun updateManga(@PathVariable id: Long, @Valid @RequestBody mangaDto: MangaDto): ResponseEntity<MangaDto> =
-        ResponseEntity.ok(mangaService.update(id, mangaDto.toEntity()).toDto())
+        ResponseEntity.ok(mangaService.updateManga(id, mangaDto.toEntity()).toDto())
 
     @DeleteMapping("/{id}")
     fun deleteManga(@PathVariable id: Long): ResponseEntity<Unit> {
-        mangaService.delete(id)
+        mangaService.deleteManga(id)
         return ResponseEntity.noContent().build()
     }
 
     @DeleteMapping("/title/{title}")
     fun deleteMangaByTitle(@PathVariable title: String): ResponseEntity<Unit> {
-        mangaService.delete(title)
+        mangaService.deleteManga(title)
         return ResponseEntity.noContent().build()
     }
 }
