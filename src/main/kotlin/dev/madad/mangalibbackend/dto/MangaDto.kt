@@ -16,6 +16,10 @@ data class MangaDto(
     val description: String,
 
     @NotBlank(message = "URL обложки не может быть пустым")
+    @Pattern(
+        regexp = "^(http|https)://.*$",
+        message = "URL обложки должен быть корректным"
+    )
     val coverImgUrl: String
 )
 
@@ -31,5 +35,4 @@ fun MangaDto.toEntity() = Manga(
     title = this.title,
     description = this.description,
     coverImgUrl = this.coverImgUrl,
-    chapters = emptyList()
 )

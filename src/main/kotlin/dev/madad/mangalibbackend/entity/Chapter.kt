@@ -11,6 +11,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import jakarta.persistence.UniqueConstraint
 
 /**
  * JPA-сущность, представляющая главу манги.
@@ -18,12 +19,14 @@ import jakarta.persistence.Table
  * @property id Уникальный идентификатор главы.
  * @property chapterNum Номер или порядок главы.
  * @property title Название или заголовок главы.
- * @property summary Краткое содержание или описание главы.
  * @property pageImgUrls Список URL изображений страниц главы.
  * @property manga Манга, к которой принадлежит данная глава.
  */
 @Entity
-@Table(name = "chapter")
+@Table(
+    name = "chapter",
+    uniqueConstraints = [UniqueConstraint(columnNames = ["manga_id", "chapter_num"])]
+)
 data class Chapter(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,15 +35,12 @@ data class Chapter(
     @Column(nullable = false)
     val chapterNum: Int = 0,
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     val title: String = "",
-
-    @Column()
-    val summary: String = "",
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "chapter_page", joinColumns = [JoinColumn(name = "chapter_id")])
-    @Column(name = "page_img_urls")
+    @Column(name = "page_img_urls", length = 500)
     val pageImgUrls: List<String> = emptyList(),
 
     @ManyToOne(fetch = FetchType.LAZY)

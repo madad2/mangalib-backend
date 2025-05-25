@@ -29,7 +29,7 @@ class MangaController(
 
     @GetMapping("/{id}")
     fun getMangaById(@PathVariable id: Long): ResponseEntity<MangaDto> =
-        mangaService.getMangaById(id)?.let { ResponseEntity.ok(it.toDto()) } ?: ResponseEntity.notFound().build()
+        mangaService.getMangaById(id).let { ResponseEntity.ok(it.toDto()) }
 
     @PostMapping
     fun createManga(@Valid @RequestBody mangaDto: MangaDto): ResponseEntity<MangaDto> {
