@@ -2,6 +2,7 @@ package dev.madad.mangalibbackend.dto
 
 import dev.madad.mangalibbackend.entity.Manga
 import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 
 data class MangaDto(
@@ -19,19 +20,22 @@ data class MangaDto(
         regexp = "^(http|https)://.*$",
         message = "URL обложки должен быть корректным"
     )
-    val coverImgUrl: String
+    val coverImgUrl: String,
+
+    val chapters: List<ChapterDto> = emptyList()
 )
 
 fun Manga.toDto() = MangaDto(
     id = this.id,
     title = this.title,
     description = this.description,
-    coverImgUrl = this.coverImgUrl
+    coverImgUrl = this.coverImgUrl,
+    chapters = this.chapters.map { it.toDto() }
 )
 
 fun MangaDto.toEntity() = Manga(
     id = this.id ?: 0,
     title = this.title,
     description = this.description,
-    coverImgUrl = this.coverImgUrl,
+    coverImgUrl = this.coverImgUrl
 )

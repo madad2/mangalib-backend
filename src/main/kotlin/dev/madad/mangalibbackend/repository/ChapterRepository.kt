@@ -10,4 +10,5 @@ interface ChapterRepository : JpaRepository<Chapter, Long> {
     fun getChaptersByMangaTitle(title: String): List<Chapter>
     fun existsByChapterNumAndMangaId(chapterNum: Int, mangaId: Long): Boolean
     fun existsByChapterNumAndMangaTitle(chapterNum: Int, title: String): Boolean
+    fun findByIdAndMangaId(id: Long, mangaId: Long): Chapter?
 }

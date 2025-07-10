@@ -3,6 +3,7 @@ package dev.madad.mangalibbackend.controller
 import dev.madad.mangalibbackend.dto.ChapterDto
 import dev.madad.mangalibbackend.dto.toDto
 import dev.madad.mangalibbackend.dto.toEntity
+import dev.madad.mangalibbackend.exception.NotFoundException
 import dev.madad.mangalibbackend.service.ChapterService
 import dev.madad.mangalibbackend.service.MangaService
 import jakarta.validation.Valid
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -50,13 +52,16 @@ class ChapterController(
         @PathVariable mangaId: Long,
         @PathVariable id: Long
     ): ResponseEntity<ChapterDto> {
-        val chapter = chapterService.getChaptersByMangaId(mangaId).find { it.id == id }
-            ?: return ResponseEntity.notFound().build()
-        return ResponseEntity.ok(chapter.toDto())
+        try {
+            val chapter = chapterService.getChapterByIdAndMangaId(id, mangaId)
+            return ResponseEntity.ok(chapter.toDto())
+        } catch (e: NotFoundException) {
+            return ResponseEntity.notFound().build()
+        }
     }
 
     // Обновить данные главы
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     fun updateChapter(
         @PathVariable mangaId: Long,
         @PathVariable id: Long,

@@ -21,6 +21,16 @@ class GlobalExceptionHandler {
             )
         )
 
+    @ExceptionHandler(BadRequestException::class)
+    fun handleBadRequest(ex: BadRequestException): ResponseEntity<ApiError> = ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
+        .body(
+            ApiError(
+                status = HttpStatus.BAD_REQUEST.value(),
+                message = ex.message ?: "Некорректный запрос",
+            )
+        )
+
     @ExceptionHandler(MethodValidationException::class)
     fun handleValidation(ex: MethodArgumentNotValidException): ResponseEntity<ApiError> {
         val errors = ex.bindingResult
