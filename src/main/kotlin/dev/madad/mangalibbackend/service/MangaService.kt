@@ -1,7 +1,8 @@
 package dev.madad.mangalibbackend.service
 
 import dev.madad.mangalibbackend.entity.Manga
-import dev.madad.mangalibbackend.exception.NotFoundException
+import dev.madad.mangalibbackend.exception.manga.MangaIllegalArgumentException
+import dev.madad.mangalibbackend.exception.manga.MangaNotFoundException
 import dev.madad.mangalibbackend.repository.MangaRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -20,18 +21,16 @@ class MangaService(
 
     // Получить мангу по id
     @Transactional(readOnly = true)
-    fun getMangaById(id: Long): Manga = mangaRepository.findById(id).orElse(null)
-        ?: throw NotFoundException("Манга с id=$id не найдена")
+    fun getMangaById(id: Long): Manga = mangaRepository.findById(id).orElseThrow { MangaNotFoundException(id) }
 
     // Получить мангу по названию
     @Transactional(readOnly = true)
-    fun getMangaByTitle(title: String): Manga = mangaRepository.findByTitle(title)
-        ?: throw NotFoundException("Манга с названием '$title' не найдена")
+    fun getMangaByTitle(title: String): Manga? = mangaRepository.findByTitle(title)
 
     // Создать мангу
     @Transactional
     fun createManga(manga: Manga): Manga {
-        if (mangaRepository.existsByTitle(manga.title)) throw IllegalArgumentException("Манга с названием '${manga.title}' уже существует")
+        if (mangaRepository.existsByTitle(manga.title)) throw MangaIllegalArgumentException(manga.title)
         return mangaRepository.save(manga)
     }
 
@@ -52,7 +51,7 @@ class MangaService(
     @Transactional
     fun deleteManga(id: Long) {
         if (!mangaRepository.existsById(id)) {
-            throw NotFoundException("Манга с id=$id не найдена")
+            throw MangaNotFoundException(id)
         }
         mangaRepository.deleteById(id)
     }
@@ -61,7 +60,7 @@ class MangaService(
     @Transactional
     fun deleteManga(title: String) {
         if (!mangaRepository.existsByTitle(title)) {
-            throw NotFoundException("Манга с названием '$title' не найдена")
+            throw MangaNotFoundException(title)
         }
         mangaRepository.deleteByTitle(title)
     }

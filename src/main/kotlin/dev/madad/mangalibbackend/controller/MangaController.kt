@@ -26,7 +26,8 @@ class MangaController(
     private val mangaService: MangaService
 ) {
     @GetMapping
-    fun getAllManga(): ResponseEntity<List<MangaDto>> = ResponseEntity.ok(mangaService.getAllManga().map { it.toDto() })
+    fun getAllManga(): ResponseEntity<List<dev.madad.mangalibbackend.entity.Manga>> =
+        ResponseEntity.ok(mangaService.getAllManga())
 
     @GetMapping("/{id}")
     fun getMangaById(@PathVariable id: Long): ResponseEntity<MangaDto> =

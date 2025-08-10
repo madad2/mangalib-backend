@@ -1,9 +1,10 @@
 package dev.madad.mangalibbackend.controller
 
 import dev.madad.mangalibbackend.dto.ChapterDto
+import dev.madad.mangalibbackend.dto.ChapterResponseDto
 import dev.madad.mangalibbackend.dto.toDto
 import dev.madad.mangalibbackend.dto.toEntity
-import dev.madad.mangalibbackend.exception.NotFoundException
+import dev.madad.mangalibbackend.dto.toResponseDto
 import dev.madad.mangalibbackend.service.ChapterService
 import dev.madad.mangalibbackend.service.MangaService
 import jakarta.validation.Valid
@@ -30,9 +31,9 @@ class ChapterController(
 
     // Получить все главы манги
     @GetMapping
-    fun getChapters(@PathVariable mangaId: Long): ResponseEntity<List<ChapterDto>> {
+    fun getChapters(@PathVariable mangaId: Long): ResponseEntity<List<ChapterResponseDto>> {
         val chapters = chapterService.getChaptersByMangaId(mangaId)
-        return ResponseEntity.ok(chapters.map { it.toDto() })
+        return ResponseEntity.ok(chapters.map { it.toResponseDto() })
     }
 
     // Добавить новую главу в мангу
@@ -52,12 +53,8 @@ class ChapterController(
         @PathVariable mangaId: Long,
         @PathVariable id: Long
     ): ResponseEntity<ChapterDto> {
-        try {
-            val chapter = chapterService.getChapterByIdAndMangaId(id, mangaId)
-            return ResponseEntity.ok(chapter.toDto())
-        } catch (e: NotFoundException) {
-            return ResponseEntity.notFound().build()
-        }
+        val chapter = chapterService.getChapterByIdAndMangaId(id, mangaId)
+        return ResponseEntity.ok(chapter.toDto())
     }
 
     // Обновить данные главы

@@ -21,25 +21,33 @@ class MangaControllerTests {
 
     @MockitoBean
     private lateinit var mangaService: MangaService
-    
+
     @Test
     fun `test get all manga`() {
-        // Тестовые данные
         val mangaList = listOf(
-            Manga(id = 1, title = "One Piece", description = "Эпическое приключение", coverImgUrl = "url1", chapters = emptyList()),
-            Manga(id = 2, title = "Naruto", description = "Приключения ниндзя", coverImgUrl = "url2", chapters = emptyList())
+            Manga(
+                id = 1,
+                title = "One Piece",
+                description = "Эпическое приключение",
+                coverImgUrl = "url1",
+                chapters = mutableListOf()
+            ),
+            Manga(
+                id = 2,
+                title = "Naruto",
+                description = "Приключения ниндзя",
+                coverImgUrl = "url2",
+                chapters = mutableListOf()
+            )
         )
 
-        // Настройка мока для сервиса
         Mockito.`when`(mangaService.getAllManga()).thenReturn(mangaList)
 
         val mapper = jacksonObjectMapper()
         val expectedJson = mapper.writeValueAsString(mangaList)
 
-        // Тестирование эндпойнта GET /api/manga
         mockMvc.perform(MockMvcRequestBuilders.get("/api/manga"))
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.content().json(expectedJson))
-
     }
 }

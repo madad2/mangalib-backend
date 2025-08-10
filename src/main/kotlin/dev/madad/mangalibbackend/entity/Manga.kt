@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
+import jakarta.persistence.OrderBy
 import jakarta.persistence.Table
 
 /**
@@ -32,9 +33,15 @@ data class Manga(
     @Column(nullable = false)
     val description: String = "",
 
-    @Column(nullable = false, name = "cover_img_url")
+    @Column(nullable = false, name = "cover")
     val coverImgUrl: String = "",
 
-    @OneToMany(mappedBy = "manga", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
-    val chapters: List<Chapter> = mutableListOf()
+    @OneToMany(
+        mappedBy = "manga",
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
+        fetch = FetchType.LAZY
+    )
+    @OrderBy("chapterNum ASC")
+    val chapters: MutableList<Chapter> = mutableListOf()
 )
